@@ -221,9 +221,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-
-
-
 });
 
 
+
+const notices = document.querySelector(".notices");
+if (notices) {
+    const initialOffset = notices.offsetTop;
+    window.addEventListener("scroll", function () {
+        if (window.scrollY > initialOffset) {
+            // Add the 'sticky' class when scrolled past the original position
+            notices.classList.add("sticky");
+        } else {
+            // Remove the 'sticky' class when scrolled back to the top
+            notices.classList.remove("sticky");
+        }
+    });
+}
+// ENDOF: NOTICES STICKY

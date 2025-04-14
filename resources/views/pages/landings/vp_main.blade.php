@@ -39,7 +39,7 @@
             <li class="notice">
                 <div class="row">
                     <div class="col-12 px-0 px-sm-0 px-md-0 px-lg-0">
-                        <div class="uix_noticeInner d-flex align-items-stretch alert alert-purple alert-dismissible border-2 border-primary shadow p-0 fade show"
+                        <div class="uix_noticeInner d-flex align-items-stretch alert alert-purple alert-dismissible border-2 border-primary shadow-md p-0 fade show"
                             role="alert">
                             <!-- Icon Container -->
                             <div class="uix_noticeIcon text-bg-purple d-flex align-items-center justify-content-center flex-shrink-0 rounded-start-1"
