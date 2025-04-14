@@ -343,10 +343,10 @@ section .posts-tags {
 
 
 /* CUSTOM: Topbar & Navbar Styles */
-li.nav-item div.dropdown-menu{
+ul.navbar-nav.active li.nav-item > div.dropdown-menu{
     z-index: 1006 !important;
 }
 
-.dropdown-menu.dropdown-menu-end.dropdown-menu-animated.dropdown-lg.py-0.show{
+ul.topbar-menu li.nav-item > div.dropdown-menu.show{
     z-index: 1006 !important;
 }
