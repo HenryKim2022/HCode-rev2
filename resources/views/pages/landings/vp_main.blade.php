@@ -68,13 +68,13 @@
             <!-- Main Content -->
             <div class="main-content order-2 order-sm-1 flex-grow-1 me-4 col-12 col-sm-12 col-md-8 col-lg-8">
                 <!-- Main content goes here -->
-                <section class="NPOSTS">
+                <section class="TPOSTS">
                     <div class="row px-0">
                         <div class="col-12 mb-2 px-0">
                             <div class="d-flex justify-content-between">
                                 <div class="bg-primary bg-opacity-1 p-2 rounded-2 d-inline-block">
                                     <h5 class="area-title my-0">
-                                        <i class="mdi mdi-checkbox-marked-circle-plus-outline"></i> New Posts
+                                        <i class="mdi mdi-checkbox-marked-circle-plus-outline"></i> Top Posts
                                     </h5>
                                     <h6 class="area-subtitle my-0"></h6>
                                 </div>
