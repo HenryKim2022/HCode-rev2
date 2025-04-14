@@ -101,8 +101,8 @@
    VITE_APP_NAME="${APP_NAME}"
    ```
 5. Go to the `config/database.php`, look for `'collation' => env('DB_COLLATION', 'utf8mb4_0900_ai_ci'),` and change it into this:
-```config/database.php
-'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+```bash
+   'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
 ```
 
 
