@@ -34,7 +34,7 @@
 
 
 @section('page-content')
-    <section>
+    {{-- <section>
         <div class="notices-container">
             <div class="row">
                 <div class="notice-outter col-12 px-0 px-sm-0 px-md-0 px-lg-0">
@@ -78,7 +78,53 @@
 
 
         </div>
+    </section> --}}
+
+
+    <section>
+        <div class="notices-container">
+            <div class="row">
+                <div class="notice-outter col-12 px-0 px-sm-0 px-md-0 px-lg-0">
+                    <ul class="notice-inner list-unstyled mb-3">
+                        <li class="notice-item d-flex align-items-stretch alert alert-purple alert-dismissible border-2 border-primary shadow-md p-0 mb-1 fade show"
+                            role="alert">
+                            <!-- Icon Container -->
+                            <div class="uix_noticeIcon text-bg-purple d-flex align-items-center justify-content-center flex-shrink-0 rounded-start-1"
+                                style="width: 48px;">
+                                <i class="mdi mdi-information-outline fs-3"></i>
+                            </div>
+                            <!-- Content Container -->
+                            <div
+                                class="notice-content flex-grow-1 py-2 px-2 d-flex flex-column justify-content-center lh-sm">
+                                <strong>Purple - </strong> A simple purple alert—check it out!<br>
+                            </div>
+                            <!-- Close Button -->
+                            <button type="button" class="btn-close align-self-center p-2 fs-7" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </li>
+                        <li class="notice-item d-flex align-items-stretch alert alert-purple alert-dismissible border-2 border-primary shadow-md p-0 mb-1 fade show"
+                            role="alert">
+                            <!-- Icon Container -->
+                            <div class="uix_noticeIcon text-bg-purple d-flex align-items-center justify-content-center flex-shrink-0 rounded-start-1"
+                                style="width: 48px;">
+                                <i class="mdi mdi-information-outline fs-3"></i>
+                            </div>
+                            <!-- Content Container -->
+                            <div
+                                class="notice-content flex-grow-1 py-2 px-2 d-flex flex-column justify-content-center lh-sm">
+                                <strong>Purple - </strong> A simple purple alert—check it out!<br>
+                            </div>
+                            <!-- Close Button -->
+                            <button type="button" class="btn-close align-self-center p-2 fs-7" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </li>
+                    </ul>
+                </div> <!-- end col-->
+            </div> <!-- end row-->
+        </div>
     </section>
+
+
 
 
     <section>

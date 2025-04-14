@@ -225,17 +225,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-const notices_container = document.querySelector(".notices-container");
-if (notices_container) {
-    const initialOffset = notices_container.offsetTop;
-    window.addEventListener("scroll", function () {
-        if (window.scrollY > initialOffset) {
-            // Add the 'sticky' class when scrolled past the original position
-            notices_container.classList.add("sticky");
-        } else {
-            // Remove the 'sticky' class when scrolled back to the top
-            notices_container.classList.remove("sticky");
-        }
-    });
-}
+const noticesContainer = document.querySelector(".notices-container");
+    const parentContainer = noticesContainer.parentElement;
+    if (noticesContainer) {
+        const initialOffset = noticesContainer.offsetTop;
+        window.addEventListener("scroll", function () {
+            if (window.scrollY > initialOffset) {
+                noticesContainer.classList.add("sticky");
+                const parentWidth = parentContainer.offsetWidth;
+                noticesContainer.style.width = `${parentWidth}px`;
+            } else {
+                noticesContainer.classList.remove("sticky");
+                noticesContainer.style.width = "auto";
+            }
+        });
+        window.addEventListener("resize", function () {
+            if (noticesContainer.classList.contains("sticky")) {
+                const parentWidth = parentContainer.offsetWidth;
+                noticesContainer.style.width = `${parentWidth}px`;
+            }
+        });
+    }
 // ENDOF: notices_container STICKY

@@ -239,8 +239,8 @@ li div.card .lazy-load a{
 .notices-container.sticky {
     position: fixed;
     top: 20vh;
-    /* width: 90.5vw; */
     /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  */
+    width: 100%;
     transition: top 0.3s ease-in-out;
 }
 
@@ -249,7 +249,6 @@ li div.card .lazy-load a{
 @media (max-width: 768px) {
     .notices-container.sticky {
         top: 9.5vh;
-        width: 100%;
     }
 }
 
