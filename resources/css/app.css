@@ -218,25 +218,25 @@ li div.card .lazy-load a{
     background-color: var(--notice-bg) !important;
 } */
 
-.notice .uix_noticeInner .btn-close {
+.notice-inner .notice-item .btn-close {
     color: var(--notice-btn-close) !important;
 }
 
 
-.notice .uix_noticeInner .notice-content {
+.notice-inner .notice-item .notice-content {
     color: var(--notice-content-text) !important;
     background-color: var(--notice-bg) !important;
 }
 
 
 /* Default positioning */
-.notices {
+.notices-container {
     position: relative;
     z-index: 1005;
 }
 
 /* Sticky positioning when scrolling */
-.notices.sticky {
+.notices-container.sticky {
     position: fixed;
     top: 20vh;
     width: 90.5vw;

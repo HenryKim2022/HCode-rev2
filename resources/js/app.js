@@ -225,17 +225,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-const notices = document.querySelector(".notices");
-if (notices) {
-    const initialOffset = notices.offsetTop;
+const notices_container = document.querySelector(".notices-container");
+if (notices_container) {
+    const initialOffset = notices_container.offsetTop;
     window.addEventListener("scroll", function () {
         if (window.scrollY > initialOffset) {
             // Add the 'sticky' class when scrolled past the original position
-            notices.classList.add("sticky");
+            notices_container.classList.add("sticky");
         } else {
             // Remove the 'sticky' class when scrolled back to the top
-            notices.classList.remove("sticky");
+            notices_container.classList.remove("sticky");
         }
     });
 }
-// ENDOF: NOTICES STICKY
+// ENDOF: notices_container STICKY

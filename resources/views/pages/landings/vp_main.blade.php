@@ -35,11 +35,11 @@
 
 @section('page-content')
     <section>
-        <ul class="notices list-unstyled">
-            <li class="notice">
-                <div class="row">
-                    <div class="col-12 px-0 px-sm-0 px-md-0 px-lg-0">
-                        <div class="uix_noticeInner d-flex align-items-stretch alert alert-purple alert-dismissible border-2 border-primary shadow-md p-0 fade show"
+        <div class="notices-container">
+            <div class="row">
+                <div class="notice-inner col-12 px-0 px-sm-0 px-md-0 px-lg-0">
+                    <ul class="list-unstyled">
+                        <li class="notice-item d-flex align-items-stretch alert alert-purple alert-dismissible border-2 border-primary shadow-md p-0 fade show"
                             role="alert">
                             <!-- Icon Container -->
                             <div class="uix_noticeIcon text-bg-purple d-flex align-items-center justify-content-center flex-shrink-0 rounded-start-1"
@@ -54,12 +54,30 @@
                             <!-- Close Button -->
                             <button type="button" class="btn-close align-self-center p-2 fs-7" data-bs-dismiss="alert"
                                 aria-label="Close"></button>
-                        </div>
-                    </div> <!-- end col-->
-                </div> <!-- end row-->
-            </li> <!-- end li-->
-            <li></li>
-        </ul>
+                        </li>
+                        <li class="notice-item d-flex align-items-stretch alert alert-purple alert-dismissible border-2 border-primary shadow-md p-0 fade show"
+                            role="alert">
+                            <!-- Icon Container -->
+                            <div class="uix_noticeIcon text-bg-purple d-flex align-items-center justify-content-center flex-shrink-0 rounded-start-1"
+                                style="width: 48px;">
+                                <i class="mdi mdi-information-outline fs-3"></i>
+                            </div>
+                            <!-- Content Container -->
+                            <div
+                                class="notice-content flex-grow-1 py-2 px-2 d-flex flex-column justify-content-center lh-sm">
+                                <strong>Purple - </strong> A simple purple alert—check it out!<br>
+                            </div>
+                            <!-- Close Button -->
+                            <button type="button" class="btn-close align-self-center p-2 fs-7" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </li>
+                    </ul>
+
+                </div> <!-- end col-->
+            </div> <!-- end row-->
+
+
+        </div>
     </section>
 
 
@@ -211,15 +229,17 @@
                     <div class="row px-0">
                         <div class="col-12 mb-2 px-0">
                             <div class="d-flex justify-content-between">
-                                <div class="bg-primary bg-opacity-1 p-2 rounded-2 d-inline-block d-flex align-items-center">
+                                <div
+                                    class="bg-primary bg-opacity-1 p-2 rounded-2 d-inline-block d-flex align-items-center">
                                     <h5 class="area-title my-0 py-0">
                                         <i class="mdi mdi-checkbox-marked-circle-plus-outline"></i> Recently Updates
                                     </h5>
                                     <h6 class="area-subtitle my-0"></h6>
                                 </div>
                                 <div class="btn-group my-1">
-                                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false" id="sort-by-button">Sort by ...</button>
+                                    <button type="button" class="btn btn-primary dropdown-toggle"
+                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                        id="sort-by-button">Sort by ...</button>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" onclick="selectCategory('All')">All</a>
                                         @foreach ($dummyCategory as $cat)
