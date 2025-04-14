@@ -41,7 +41,7 @@
                             <span class="logo-sm">
                                 <img id="logo-sm" src="{{ appLogo() }}" alt="small logo">
                             </span>
-                            <h2 class="brand-text mb-0 ms-1">{{ appAlias() }}</h2>
+                            <h2 class="brand-text d-none d-sm-none d-md-block d-lg-block mb-0 ms-1">{{ appAlias() }}</h2>
 
                         </a>
                     </li>
