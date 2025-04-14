@@ -38,7 +38,7 @@
         <div class="notices-container">
             <div class="row">
                 <div class="notice-outter col-12 px-0 px-sm-0 px-md-0 px-lg-0">
-                    <ul class="notice-inner list-unstyled mb-2">
+                    <ul class="notice-inner list-unstyled mb-3">
                         <li class="notice-item d-flex align-items-stretch alert alert-purple alert-dismissible border-2 border-primary shadow-md p-0 mb-1 fade show"
                             role="alert">
                             <!-- Icon Container -->
