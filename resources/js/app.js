@@ -45,9 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
 // ENDOF: PHOTOSWIPE LIGHTBOX
 
 
-
-
-
 // Define the togglePassword function and attach it to the window object
 window.togglePassword = function (fieldId) {
     const input = document.getElementById(fieldId);
