@@ -248,7 +248,7 @@ li div.card .lazy-load a{
 
 @media (max-width: 768px) {
     .notices-container.sticky {
-        top: 10vh;
+        top: 6vh;
     }
 }
 
