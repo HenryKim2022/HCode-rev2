@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Note:
+# Must allow excute first
+#   chmod +x webhosting.sh
+
+
 # Set directory permissions
 find . -type d -exec chmod 755 {} \;
 

@@ -176,6 +176,15 @@ html[data-bs-theme=light] {
     display: block;
 }
 
+
+
+li div.card .lazy-load a{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
 .card-img-top {
     width: 100%;
     height: 100%;
