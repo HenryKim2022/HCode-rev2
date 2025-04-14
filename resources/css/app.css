@@ -10,7 +10,7 @@
 
 html[data-bs-theme=dark] {
     --brand-color: var(--tz-white);
-    --notice-bg: white;
+    --notice-bg: #3b3f53;
     --notice-btn-close: black;
     --notice-content-text: white;
     --area-title-color: white;
@@ -225,6 +225,7 @@ li div.card .lazy-load a{
 
 .notice .uix_noticeInner .notice-content {
     color: var(--notice-content-text) !important;
+    background-color: var(--notice-bg) !important;
 }
 
 
