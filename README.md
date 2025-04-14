@@ -169,6 +169,9 @@
                },
            }),
        ],
+       server: {
+           cors: true,      // Enable CORS for all origins
+       },
    });
    ```
 3. Add scripts to your `package.json` for building and running Vite:
