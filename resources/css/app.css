@@ -363,3 +363,12 @@ div.topbar ul.topbar li.dropdown .dropdown-menu.dropdown-menu-end.dropdown-menu-
 div.topnav nav.navbar ul.navbar li.nav-item div.dropdown-menu {
 	z-index: 1006;
 }
+
+
+li.nav-item div.dropdown-menu{
+    z-index: 1006;
+}
+
+.dropdown-menu.dropdown-menu-end.dropdown-menu-animated.dropdown-lg.py-0.show{
+    z-index: 1006;
+}
