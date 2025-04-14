@@ -225,25 +225,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+
+const userAgent = navigator.userAgent;
+if (/Chrome\/\d+/.test(userAgent) && !userAgent.includes("Edg")) {
+    // Chrome-specific class
+    document.body.classList.add("is-chrome");
+} else if (/Firefox\/\d+/.test(userAgent)) {
+    // Firefox-specific class
+    document.body.classList.add("is-firefox");
+}
+// ENDOF: BROWSER DETECTOR
+
+
+
 const noticesContainer = document.querySelector(".notices-container");
-    const parentContainer = noticesContainer.parentElement;
-    if (noticesContainer) {
-        const initialOffset = noticesContainer.offsetTop;
-        window.addEventListener("scroll", function () {
-            if (window.scrollY > initialOffset) {
-                noticesContainer.classList.add("sticky");
-                const parentWidth = parentContainer.offsetWidth;
-                noticesContainer.style.width = `${parentWidth}px`;
-            } else {
-                noticesContainer.classList.remove("sticky");
-                noticesContainer.style.width = "auto";
-            }
-        });
-        window.addEventListener("resize", function () {
-            if (noticesContainer.classList.contains("sticky")) {
-                const parentWidth = parentContainer.offsetWidth;
-                noticesContainer.style.width = `${parentWidth}px`;
-            }
-        });
-    }
+const parentContainer = noticesContainer.parentElement;
+if (noticesContainer) {
+    const initialOffset = noticesContainer.offsetTop;
+    window.addEventListener("scroll", function () {
+        if (window.scrollY > initialOffset) {
+            noticesContainer.classList.add("sticky");
+            const parentWidth = parentContainer.offsetWidth;
+            noticesContainer.style.width = `${parentWidth}px`;
+        } else {
+            noticesContainer.classList.remove("sticky");
+            noticesContainer.style.width = "auto";
+        }
+    });
+    window.addEventListener("resize", function () {
+        if (noticesContainer.classList.contains("sticky")) {
+            const parentWidth = parentContainer.offsetWidth;
+            noticesContainer.style.width = `${parentWidth}px`;
+        }
+    });
+}
 // ENDOF: notices_container STICKY

@@ -235,23 +235,32 @@ li div.card .lazy-load a{
     z-index: 1005;
 }
 
-/* Sticky positioning when scrolling */
+/* Default sticky behavior */
 .notices-container.sticky {
     position: fixed;
-    top: 20vh;
-    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  */
+    top: 20vh; /* Default for all browsers */
     width: 100%;
     transition: top 0.3s ease-in-out;
 }
+.is-chrome .notices-container.sticky {
+    top: 20vh;
+}
+.is-firefox .notices-container.sticky {
+    top: 21vh;
+}
 
-
-
+/* Responsive adjustments */
 @media (max-width: 768px) {
     .notices-container.sticky {
         top: 9.5vh;
     }
+    .is-chrome .notices-container.sticky {
+        top: 9.5vh;
+    }
+    .is-firefox .notices-container.sticky {
+        top: 11vh;
+    }
 }
-
 
 
 
