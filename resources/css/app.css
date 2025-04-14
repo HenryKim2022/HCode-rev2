@@ -356,19 +356,19 @@ section .posts-tags {
 
 
 /* CUSTOM: Topbar & Navbar Styles */
-div.topbar ul.topbar li.dropdown .dropdown-menu.dropdown-menu-end.dropdown-menu-animated.dropdown-lg.py-0.show{
+/* div.topbar ul.topbar li.dropdown .dropdown-menu.dropdown-menu-end.dropdown-menu-animated.dropdown-lg.py-0.show{
 	z-index: 1006;
 }
 
 div.topnav nav.navbar ul.navbar li.nav-item div.dropdown-menu {
 	z-index: 1006;
-}
+} */
 
 
 li.nav-item div.dropdown-menu{
-    z-index: 1006;
+    z-index: 1006 !important;
 }
 
 .dropdown-menu.dropdown-menu-end.dropdown-menu-animated.dropdown-lg.py-0.show{
-    z-index: 1006;
+    z-index: 1006 !important;
 }
