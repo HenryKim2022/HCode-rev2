@@ -218,12 +218,12 @@ li div.card .lazy-load a{
     background-color: var(--notice-bg) !important;
 } */
 
-.notice-inner .notice-item .btn-close {
+.notice-outter .notice-item .btn-close {
     color: var(--notice-btn-close) !important;
 }
 
 
-.notice-inner .notice-item .notice-content {
+.notice-outter .notice-item .notice-content {
     color: var(--notice-content-text) !important;
     background-color: var(--notice-bg) !important;
 }
