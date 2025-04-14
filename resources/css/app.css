@@ -354,3 +354,11 @@ section .posts-tags {
 }
 
 
+
+/* CUSTOM: Topbar & Navbar Styles */
+.top-nav.active nav.navbar li.nav-item div.dropdown-menu.show{
+	z-index: 1006;
+}
+.top-bar ul.topbar-menu li.dropdown div.dropdown-menu{
+	z-index: 1006;
+}
