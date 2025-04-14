@@ -244,7 +244,7 @@
                                                         <div class="col-md-4 position-relative">
                                                             <div class="pswp-gallery lazy-load position-relative">
                                                                 <a href="{{ asset('template/assets/images/small/small-2.jpg') }}?v={{ time() }}"
-                                                                    data-pswp-width="1650" data-pswp-height="1080"
+                                                                    data-pswp-width="1635" data-pswp-height="1080"
                                                                     data-caption="This is a caption"
                                                                     style="object-fit: cover !important; height: 100% !important; width:100% !important;">
                                                                     <img src="{{ asset('template/assets/images/small/small-2.jpg') }}?v={{ time() }}"
@@ -394,7 +394,7 @@
                                                         <div class="row g-0 align-items-stretch">
                                                         <div class="col-md-4 position-relative">
                                                             <div class="lazy-load pswp-gallery position-relative">
-                                                                <a href="{{ asset('template/assets/images/small/small-2.jpg') }}?v={{ time() }}" data-pswp-width="1900" data-caption="This is a caption 1" data-pswp-height="1080">
+                                                                <a href="{{ asset('template/assets/images/small/small-2.jpg') }}?v={{ time() }}" data-caption="This is a caption 1" data-pswp-width="1635" data-pswp-height="1080">
                                                                     <img src="{{ asset('template/assets/images/small/small-2.jpg') }}?v={{ time() }}"
                                                                     class="card-img-top" loading="lazy" alt="...">
                                                                 </a>
@@ -434,7 +434,7 @@
                                                                 <div class="row g-0 align-items-stretch">
                                                                 <div class="col-md-4 position-relative">
                                                                     <div class="lazy-load pswp-gallery position-relative">
-                                                                        <a href="{{ asset('template/assets/images/small/small-2.jpg') }}?v={{ time() }}" data-pswp-width="1900" data-caption="This is a caption 1" data-pswp-height="1080">
+                                                                        <a href="{{ asset('template/assets/images/small/small-2.jpg') }}?v={{ time() }}" data-caption="This is a caption 1" data-pswp-width="1635" data-pswp-height="1080">
                                                                             <img src="{{ asset('template/assets/images/small/small-2.jpg') }}?v={{ time() }}"
                                                                             class="card-img-top" loading="lazy" alt="...">
                                                                         </a>
