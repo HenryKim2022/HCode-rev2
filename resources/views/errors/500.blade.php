@@ -16,7 +16,7 @@
                             <h2 class="text-uppercase text-danger mt-3">Internal Server Error</h2>
                             <p class="text-muted mt-3"> Why not try refreshing your page? or you can contact <a href="javascript: void(0);" class="text-primary"><b>Support</b></a></p>
 
-                            <a class="btn btn-soft-danger mt-3" href="index.html"><i class="ri-home-4-line me-1"></i>
+                            <a class="btn btn-soft-danger mt-3" href="{{ config('app.url') }}"><i class="ri-home-4-line me-1"></i>
                                 Back to Home</a>
                         </div> <!-- end /.text-center-->
                     </div> <!-- end col-->
