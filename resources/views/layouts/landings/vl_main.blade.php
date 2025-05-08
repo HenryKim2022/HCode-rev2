@@ -19,7 +19,7 @@
         <div class="content-page">
             <div class="content">
 
-                <!-- Start Content-->
+                {{-- <!-- Start Content-->
                 <div class="container-fluid">
                     <!-- start breadcrumb -->
                     <div class="row px-0">
@@ -42,7 +42,62 @@
 
                     @yield('page-content')
                 </div>
+                <!-- container --> --}}
+
+
+
+                <!-- Start Content -->
+                <div class="container-fluid">
+                    <!-- start breadcrumb -->
+                    <div class="row px-0">
+                        <div class="col-12 px-0">
+                            <div class="page-title-box d-flex align-items-center justify-content-between">
+                                <h4 class="page-title-1 d-none d-md-block d-lg-block float-left my-2 ml-0">
+                                    @if (isset($breadcrumbs) && count($breadcrumbs) > 0)
+                                        {{ $breadcrumbs[count($breadcrumbs) - 1]['name'] }}
+                                    @else
+                                        Home
+                                    @endif
+                                </h4>
+                                <div class="page-title-2 d-block float-end mx-0">
+                                    <ol class="breadcrumb m-0 py-2 d-flex flex-wrap">
+                                        @if (isset($breadcrumbs) && count($breadcrumbs) > 0)
+                                            @foreach ($breadcrumbs as $index => $breadcrumb)
+                                                @if ($index === count($breadcrumbs) - 1)
+                                                    <!-- Active (last) breadcrumb -->
+                                                    <li class="breadcrumb-item active">{{ $breadcrumb['name'] }}</li>
+                                                @else
+                                                    <!-- Regular breadcrumb -->
+                                                    <li class="breadcrumb-item mr-2">
+                                                        <a href="{{ $breadcrumb['url'] }}">{{ $breadcrumb['name'] }}</a>
+                                                    </li>
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            <li class="breadcrumb-item active">Home</li>
+                                        @endif
+                                    </ol>
+
+                                    {{-- <ol class="breadcrumb">
+                                        @if (isset($breadcrumbs) && count($breadcrumbs) > 0)
+                                            @foreach ($breadcrumbs as $breadcrumb)
+                                                <li class="breadcrumb-item">{{ $breadcrumb['name'] }}</li>
+                                            @endforeach
+                                        @else
+                                            <li class="breadcrumb-item">Home</li>
+                                        @endif
+                                    </ol> --}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end breadcrumb -->
+
+                    @yield('page-content')
+                </div>
                 <!-- container -->
+
+
 
             </div>
             <!-- content -->

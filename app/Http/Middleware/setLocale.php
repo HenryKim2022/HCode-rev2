@@ -14,8 +14,13 @@ class setLocale
             if (session()->has('locale')) {
                 app()->setLocale(session()->get('locale'));
             }
+        } else {
+            app()->setLocale(config('app.fallback_locale')); // Fallback to the default locale
         }
 
+
+        // Debug the active locale
+        // dd(app()->getLocale());
         return $next($request);
     }
 }

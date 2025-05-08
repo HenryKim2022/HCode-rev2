@@ -7,6 +7,9 @@
 
     # Allow direct access to reset.php
     RewriteCond %{REQUEST_URI} ^/reset\.php$ [NC]
+    RewriteCond %{REQUEST_URI} ^/test\.php$ [NC]
+	RewriteCond %{REQUEST_URI} ^/test2\.php$ [NC]
+	RewriteCond %{REQUEST_URI} ^/upload\.php$ [NC]
     RewriteRule .* - [L]
 
     # Redirect all other requests to the public folder

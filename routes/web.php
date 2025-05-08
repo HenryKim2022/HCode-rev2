@@ -16,9 +16,19 @@ Route::group(['middleware' => ['setLocale']], function () {
     Route::get('/temp', [Template_Controller::class, 'template']);
 });
 
-// Language Switching Route
-Route::get('/lang/{locale}', [Language_Controller::class, 'switchLanguage'])
-    ->name('lang.switch');
+// // Language Switching Route
+// Route::get('/lang/{locale}', [Language_Controller::class, 'switchLanguage'])
+//     ->name('lang.switch');
+
+use Illuminate\Support\Facades\Session;
+Route::get('/lang/{locale}', function ($locale) {
+    // Validate the locale
+    $supportedLocales = ['en', 'id']; // Add other supported locales here
+    if (in_array($locale, $supportedLocales)) {
+        Session::put('locale', $locale); // Update the session with the new locale
+    }
+    return redirect()->back(); // Redirect back to the previous page
+})->name('lang.switch');
 
 
 Route::middleware(['setLocale'])->group(function () {

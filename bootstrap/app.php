@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\setLocale;
 use App\Http\Middleware\RoleCheckMiddleware;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
+use App\Http\Middleware\GenerateBreadcrumbs;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -28,6 +29,12 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'setLocale' => setLocale::class,
             'role' => RoleCheckMiddleware::class,
+        ]);
+
+        // Append GenerateBreadcrumbs to the 'web' group
+        $middleware->appendToGroup('web', [
+            setLocale::class, // Set locale first,
+            GenerateBreadcrumbs::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
