@@ -547,13 +547,6 @@
                 dupBtn.onclick = () => duplicateImage(photoName);
                 dupBtn.innerHTML = '<i class="far fa-clone"></i>';
 
-                const cropBtn = document.createElement('button');
-                cropBtn.type = 'button';
-                cropBtn.className = 'btn btn-sm btn-primary';
-                cropBtn.innerHTML = '<i class="fas fa-crop"></i> Crop';
-                cropBtn.onclick = () => toggleCrop(photoName, cropBtn);
-                buttonBar.appendChild(cropBtn);
-
                 const delBtn = document.createElement('button');
                 delBtn.type = 'button';
                 delBtn.className = 'btn btn-sm btn-danger';
