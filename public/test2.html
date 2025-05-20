@@ -57,8 +57,27 @@
 </head>
 
 <body data-spy="scroll" data-target="#scrollspy" data-offset="0">
+    <div id="preloader" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
     <a id="top" class="clear"></a>
+
     <style>
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
         #drop-area {
             border: 2px dashed #ccc !important;
             text-align: center;
@@ -174,8 +193,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-7 col-lg-8 col-md-7">
-                <div id="drop-area" class="border rounded bg-white p-4 text-center mb-3 highlight">
+            <div class="drop-area-outter col-xl-7 col-lg-8 col-md-7">
+                <div id="drop-area" class="drop-area border rounded bg-white p-4 text-center mb-3 highlight">
                     <p style="font-size:1.125em;" class="pt-2">Drag banyak foto yang akan dicetak sekaligus.</p>
                     <input type="file" id="fileElem" multiple="" accept="image/*" onchange="handleFiles(this.files)">
                     <label class="btn btn-primary" for="fileElem"><i class="fa fa-upload mr-2"></i> Upload Foto</label>
@@ -260,6 +279,9 @@
 
         <script>
             let dropArea = document.getElementById("drop-area");
+            let dropAreaOutter = document.querySelector(".drop-area-outter");
+
+
             let files;
             let amountDefault = 4;
             let setting;
@@ -301,22 +323,37 @@
                 "120": 63    // Facebook Post
             };
 
+            function showPreloader() {
+                document.getElementById('preloader').style.display = 'flex';
+            }
+
+            function hidePreloader() {
+                setTimeout(() => {
+                    document.getElementById('preloader').style.display = 'none';
+                }, 1000); // Simulasi waktu pemrosesan
+
+            }
+
             // Prevent default drag behaviors
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                 dropArea.addEventListener(eventName, preventDefaults, false);
+                dropAreaOutter.addEventListener(eventName, preventDefaults, false);
                 document.body.addEventListener(eventName, preventDefaults, false);
             });
 
             // Highlight drop area on drag over
             ['dragenter', 'dragover'].forEach(eventName => {
                 dropArea.addEventListener(eventName, highlight, false);
+                dropAreaOutter.addEventListener(eventName, highlight, false);
             });
             ['dragleave', 'drop'].forEach(eventName => {
                 dropArea.addEventListener(eventName, unhighlight, false);
+                dropAreaOutter.addEventListener(eventName, unhighlight, false);
             });
 
             // Handle dropped files
             dropArea.addEventListener('drop', handleDrop, false);
+            dropAreaOutter.addEventListener('drop', handleDrop, false);
 
             function preventDefaults(e) {
                 e.preventDefault();
@@ -338,10 +375,14 @@
             }
 
             function handleFiles(files) {
+                showPreloader();
                 files = [...files];
                 files.forEach(previewFile);
                 $('#fileElem').val('');
+                hidePreloader();
             }
+
+
 
             function previewFile(file) {
                 photoID++;
@@ -520,12 +561,15 @@
             }
 
             function deleteImage(i) {
+                showPreloader();
                 delete photos[i];
                 $('#' + i).css('display', 'none');
                 previewPDF();
+                hidePreloader();
             }
 
             function duplicateImage(i) {
+                showPreloader();
                 photoID++;
                 let photoName = 'file' + photoID;
                 photos[photoName] = Object.assign({}, photos[i]);
@@ -619,6 +663,7 @@
 
                 document.getElementById(photoName + '_amount').value = photos[photoName].amount;
                 previewPDF();
+                hidePreloader();
             }
 
             // // function resizeImage(photoName, width) {
@@ -1320,9 +1365,11 @@
 
 
         function enableCropMode(photoName, cropBtn) {
+            showPreloader();
             const imageData = photos[photoName].data;
             document.getElementById('cropImage').src = imageData;
             $('#cropModal').modal('show'); // Show the crop modal
+            hidePreloader();
 
             // Initialize Cropper.js when the modal is shown
             $('#cropModal').off('shown.bs.modal').on('shown.bs.modal', function () {
