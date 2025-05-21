@@ -278,6 +278,10 @@
         <script>window.jsPDF = window.jspdf.jsPDF;</script>
 
         <script>
+            $(document).ready(function () {
+                gSetup();
+            });
+
             let dropArea = document.getElementById("drop-area");
             let dropAreaOutter = document.querySelector(".drop-area-outter");
 
@@ -374,14 +378,101 @@
                 handleFiles(files);
             }
 
+            // function handleFiles(files) {
+            //     showPreloader();
+            //     files = [...files];
+            //     files.forEach(previewFile);
+            //     $('#fileElem').val('');
+            //     hidePreloader();
+            // }
+
+
+            // Tambahkan fungsi untuk mengompres gambar
+            function compressImage(file, maxSizeMB = 10, quality = 0.8) {
+                return new Promise((resolve, reject) => {
+                    if (file.size / 1024 / 1024 <= maxSizeMB) {
+                        resolve(file); // Jika ukuran file <= 10MB, tidak perlu dikompres
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function (event) {
+                        const img = new Image();
+                        img.src = event.target.result;
+                        img.onload = function () {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+
+                            // Set ukuran canvas sesuai dengan gambar asli
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+
+                            // Gambar ulang gambar ke dalam canvas
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                            // Kompres gambar ke format JPEG dengan kualitas tertentu
+                            canvas.toBlob(
+                                (blob) => {
+                                    if (blob) {
+                                        const compressedFile = new File([blob], file.name, { type: 'image/jpeg' });
+                                        resolve(compressedFile);
+                                    } else {
+                                        reject(new Error('Gagal mengompres gambar.'));
+                                    }
+                                },
+                                'image/jpeg',
+                                Math.min(Math.max(quality, 0.1), 1) // Pastikan kualitas berada di antara 0.1 dan 1
+                            );
+                        };
+                    };
+                    reader.onerror = function (error) {
+                        reject(error);
+                    };
+                });
+            }
+
+
+            // Modifikasi fungsi handleFiles untuk memproses kompresi
+            // function handleFiles(files) {
+            //     showPreloader();
+            //     files = [...files];
+            //     const compressedFilesPromises = files.map((file) => compressImage(file));
+            //     Promise.all(compressedFilesPromises)
+            //         .then((compressedFiles) => {
+            //             compressedFiles.forEach(previewFile);
+            //             $('#fileElem').val('');
+            //             hidePreloader();
+            //         })
+            //         .catch((error) => {
+            //             console.error('Error saat mengompres gambar:', error);
+            //             hidePreloader();
+            //         });
+            // }
+
+
+
             function handleFiles(files) {
                 showPreloader();
                 files = [...files];
-                files.forEach(previewFile);
-                $('#fileElem').val('');
-                hidePreloader();
+                if (setting.compress) {
+                    const compressedFilesPromises = files.map((file) => compressImage(file, 10, setting.quality)); // Gunakan setting.quality
+                    Promise.all(compressedFilesPromises)
+                        .then((compressedFiles) => {
+                            compressedFiles.forEach(previewFile);
+                            $('#fileElem').val('');
+                            hidePreloader();
+                        })
+                        .catch((error) => {
+                            console.error('Error saat mengompres gambar:', error);
+                            hidePreloader();
+                        });
+                } else {
+                    files.forEach(previewFile); // Langsung tampilkan gambar tanpa kompresi
+                    $('#fileElem').val('');
+                    hidePreloader();
+                }
             }
-
 
 
             function previewFile(file) {
@@ -727,6 +818,8 @@
 
                 let top = 0;
                 let left = 0;
+                // let top = setting['margin'] ? setting['margin'] : 0;
+                // let left = setting['margin'] ? setting['margin'] : 0;
                 let currentHeight = 0; // Tracks the tallest image in the current row
                 let maxRight = paperWidth - 2 * setting['margin'];
                 let maxBottom = paperHeight - setting['margin'];
@@ -737,6 +830,8 @@
                 html += '<div class="border position-relative" style="height: ' + (maxBottom - setting['margin']) + 'px;">';
 
                 let pageCount = 1; // Initialize page counter
+                currentPhotoLine = 1; // Reset to the first line
+
                 for (let x in photos) {
                     let amount = parseInt(photos[x]['amount']);
                     let width = parseInt(photos[x]['width']);
@@ -769,6 +864,7 @@
                             left = 0;
                             top += currentHeight + setting['spacing']; // Use the tallest image in the row
                             currentHeight = 0; // Reset for the new row
+                            currentPhotoLine++; // Increment the photo line
                         }
 
                         // Check if the image fits on the current page
@@ -782,7 +878,15 @@
                             left = 0;
                             currentHeight = 0;
                             pageCount++;
+                            currentPhotoLine = 1; // Reset to the first line for the new page
                         }
+
+                        // // Ensure top and left are reset when currentPhotoLine == 1
+                        // if (currentPhotoLine === 1) {
+                        //     top -= setting['margin'];
+                        //     left = left - setting['margin'];
+                        // }
+
 
                         // Add the image to the HTML
                         html += `<img src="${photos[x]['data']}" width="${imgWidth}" height="${imgHeight}"
@@ -850,7 +954,109 @@
 
 
 
-            /////// V2
+            // /////// V2
+            // function downloadPDF(mode) {
+            //     const doc = new jsPDF('p', 'mm', 'a4');
+            //     let top = setting['margin'];
+            //     let left = setting['margin'];
+            //     let currentHeight = 0;
+            //     const maxRight = paperWidth - setting['margin'];
+            //     const maxBottom = paperHeight - setting['margin'];
+
+            //     for (let x in photos) {
+            //         let amount = parseInt(photos[x]['amount']);
+            //         let width = parseInt(photos[x]['width']);
+            //         let height = photoHeights[photos[x]['width']];
+
+            //         // Validate dimensions
+            //         if (!width || !height || isNaN(width) || isNaN(height)) {
+            //             console.error(`Invalid dimensions for photo: ${x}. Width: ${width}, Height: ${height}`);
+            //             continue; // Skip this photo if dimensions are invalid
+            //         }
+
+            //         for (let y = 0; y < amount; y++) {
+            //             let imgWidth = width;
+            //             let imgHeight = height;
+
+            //             // Scale image if needed
+            //             if (imgWidth > maxRight || imgHeight > maxBottom) {
+            //                 let scale = Math.min(maxRight / imgWidth, maxBottom / imgHeight);
+            //                 imgWidth *= scale;
+            //                 imgHeight *= scale;
+            //             }
+
+            //             let right = left + (photos[x]['orientation'] === 'landscape' ? imgHeight : imgWidth);
+
+            //             // Check if the image fits in the current row
+            //             if (right > maxRight) {
+            //                 // Move to the next row
+            //                 left = setting['margin'];
+            //                 top += currentHeight + setting['spacing']; // Use the tallest image in the row
+            //                 currentHeight = 0; // Reset for the new row
+            //             }
+
+            //             // Check if the image fits on the current page
+            //             if (top + imgHeight > maxBottom) {
+            //                 // Add a new page
+            //                 doc.addPage();
+            //                 top = setting['margin'];
+            //                 left = setting['margin'];
+            //                 currentHeight = 0;
+            //             }
+
+            //             if (photos[x]['orientation'] === 'landscape'){
+            //                 photoHeights = imgWidth;
+            //                 photoWidths = imgHeight;
+            //             }else{
+            //                 photoHeights = imgHeight;
+            //                 photoWidths = imgWidth;
+            //             }
+
+            //             // // Add the image to the PDF
+            //             // doc.addImage(
+            //             //     photos[x]['data'],
+            //             //     'JPEG',
+            //             //     left,
+            //             //     top,
+            //             //     photos[x]['orientation'] === 'landscape' ? imgHeight : imgWidth,
+            //             //     photos[x]['orientation'] === 'landscape' ? imgWidth : imgHeight,
+            //             //     undefined,
+            //             //     'FAST'
+            //             // );
+            //             // Add the image to the PDF
+            //             doc.addImage(
+            //                 photos[x]['data'],
+            //                 'JPEG',
+            //                 left,
+            //                 top,
+            //                 photoHeights,
+            //                 photoWidths,
+            //                 undefined,
+            //                 'FAST'
+            //             );
+
+            //             // Update `left` and `currentHeight`
+            //             left += (photos[x]['orientation'] === 'landscape' ? imgHeight : imgWidth) + setting['spacing'];
+            //             currentHeight = Math.max(currentHeight, photos[x]['orientation'] === 'landscape' ? imgWidth : imgHeight);
+            //         }
+            //     }
+
+            //     if (mode === 'download') {
+            //         const today = new Date();
+            //         const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+            //         const time = today.getHours() + '-' + today.getMinutes();
+            //         const dateTime = date + '-' + time;
+            //         doc.save('cetak-foto-' + dateTime + '.pdf');
+            //     } else if (mode === 'print') {
+            //         doc.autoPrint();
+            //         doc.output('dataurlnewwindow');
+            //     }
+            // }
+            // //////// END OF V2
+
+
+
+            // /////// V2.1
             function downloadPDF(mode) {
                 const doc = new jsPDF('p', 'mm', 'a4');
                 let top = setting['margin'];
@@ -881,7 +1087,7 @@
                             imgHeight *= scale;
                         }
 
-                        let right = left + (photos[x]['orientation'] === 'landscape' ? imgHeight : imgWidth);
+                        let right = left + (photos[x]['orientation'] === 'landscape' ? imgWidth : imgWidth);
 
                         // Check if the image fits in the current row
                         if (right > maxRight) {
@@ -892,7 +1098,7 @@
                         }
 
                         // Check if the image fits on the current page
-                        if (top + imgHeight > maxBottom) {
+                        if (top + (photos[x]['orientation'] === 'landscape' ? imgHeight : imgHeight) > maxBottom) {  // <-- kondisional if Ini sudah saya custom ukuran sudah benar
                             // Add a new page
                             doc.addPage();
                             top = setting['margin'];
@@ -900,17 +1106,31 @@
                             currentHeight = 0;
                         }
 
-                        // Add the image to the PDF
-                        doc.addImage(
-                            photos[x]['data'],
-                            'JPEG',
-                            left,
-                            top,
-                            photos[x]['orientation'] === 'landscape' ? imgHeight : imgWidth,
-                            photos[x]['orientation'] === 'landscape' ? imgWidth : imgHeight,
-                            undefined,
-                            'FAST'
-                        );
+                        // Add the image to the PDF with rotation for landscape
+                        if (photos[x]['orientation'] === 'landscape') {
+                            doc.addImage(
+                                photos[x]['data'],
+                                'JPEG',
+                                left + imgHeight, // Adjust left position
+                                top - (imgWidth / 2) + 0.5 + setting['spacing'], // Adjust top position
+                                imgWidth, // <-- Ini sudah saya custom ukuran sudah benar
+                                imgHeight, //<-- Ini sudah saya custom ukuran sudah benar
+                                undefined,
+                                'FAST',
+                                90 // Rotate 90 degrees (landscape)
+                            );
+                        } else {
+                            doc.addImage(
+                                photos[x]['data'],
+                                'JPEG',
+                                left,
+                                top,
+                                imgWidth,
+                                imgHeight,
+                                undefined,
+                                'FAST'
+                            );
+                        }
 
                         // Update `left` and `currentHeight`
                         left += (photos[x]['orientation'] === 'landscape' ? imgHeight : imgWidth) + setting['spacing'];
@@ -929,7 +1149,8 @@
                     doc.output('dataurlnewwindow');
                 }
             }
-            //////// END OF V2
+            // //////// END OF V2.1
+
 
 
 
@@ -1158,39 +1379,159 @@
 
 
 
+            // function gSetup() {
+            //     if (localStorage.getItem("cetak-setting") === null) {
+            //         setting = {
+            //             paperSize: 'a4',
+            //             margin: 8,
+            //             spacing: 3,
+            //             line: 0
+            //         };
+            //         localStorage.setItem("cetak-setting", JSON.stringify(setting));
+            //     } else {
+            //         let settingJSON = localStorage.getItem('cetak-setting');
+            //         setting = JSON.parse(settingJSON);
+            //     }
+            //     for (var s in setting) {
+            //         $('#setting-' + s).val(setting[s]);
+            //     }
+            //     setting['margin'] = parseInt(setting['margin']) || 8;
+            //     setting['spacing'] = parseInt(setting['spacing']) || 3;
+            //     setting['line'] = parseInt(setting['line']) || 0;
+            // }
+
+
             function gSetup() {
                 if (localStorage.getItem("cetak-setting") === null) {
+                    // Default settings jika belum ada di localStorage
                     setting = {
                         paperSize: 'a4',
                         margin: 8,
                         spacing: 3,
-                        line: 0
+                        line: 0,
+                        compress: true, // Default: kompresi aktif
+                        quality: 1   // Default: kualitas 100%
                     };
                     localStorage.setItem("cetak-setting", JSON.stringify(setting));
                 } else {
+                    // Muat pengaturan dari localStorage
                     let settingJSON = localStorage.getItem('cetak-setting');
                     setting = JSON.parse(settingJSON);
-                }
-                for (var s in setting) {
-                    $('#setting-' + s).val(setting[s]);
-                }
-                setting['margin'] = parseInt(setting['margin']) || 8;
-                setting['spacing'] = parseInt(setting['spacing']) || 3;
-                setting['line'] = parseInt(setting['line']) || 0;
-            }
 
-            gSetup();
+                    // Validasi properti yang diperlukan
+                    setting = {
+                        paperSize: setting.paperSize || 'a4',
+                        margin: parseInt(setting.margin) || 8,
+                        spacing: parseInt(setting.spacing) || 3,
+                        line: parseInt(setting.line) || 0,
+                        compress: setting.compress !== undefined ? setting.compress : true,
+                        quality: parseFloat(setting.quality) || 1
+                    };
+                }
+
+                // Terapkan pengaturan ke elemen input
+                $('#setting-compress').prop('checked', setting.compress); // Terapkan ke checkbox
+                $('#setting-quality').val(setting.quality); // Terapkan ke dropdown kualitas
+                $('#setting-margin').val(setting.margin);
+                $('#setting-spacing').val(setting.spacing);
+                $('#setting-line').val(setting.line);
+
+                // Tambahkan event listener onchange untuk menyimpan pengaturan secara otomatis
+                $('#setting-compress').on('change', gSettingSave);
+                $('#setting-quality').on('change', gSettingSave);
+                $('#setting-margin').on('change', gSettingSave);
+                $('#setting-spacing').on('change', gSettingSave);
+                $('#setting-line').on('change', gSettingSave);
+            }
+            // gSetup();
+
+            // function gSettingSave() {
+            //     for (var s in setting) {
+            //         setting[s] = $('#setting-' + s).val();
+            //     }
+            //     setting['margin'] = parseInt($('#setting-margin').val()) || 8;
+            //     setting['spacing'] = parseInt($('#setting-spacing').val()) || 3;
+            //     setting['line'] = parseInt($('#setting-line').val()) || 0;
+            //     localStorage.setItem("cetak-setting", JSON.stringify(setting));
+            //     $('#gtModal').modal('hide');
+            //     previewPDF();
+            // }
+
+
+
+            // function gSettingSave() {
+            //     for (var s in setting) {
+            //         setting[s] = $('#setting-' + s).val();
+            //     }
+            //     setting['margin'] = parseInt($('#setting-margin').val()) || 0; // Pastikan margin diatur ke 0 jika tidak ada nilai
+            //     setting['spacing'] = parseInt($('#setting-spacing').val()) || 3;
+            //     setting['line'] = parseInt($('#setting-line').val()) || 0;
+            //     console.log('Updated settings:', setting); // Debugging
+            //     localStorage.setItem("cetak-setting", JSON.stringify(setting));
+            //     previewPDF(); // Pastikan preview diperbarui
+            //     $('#gtModal').modal('hide');
+            // }
+
 
             function gSettingSave() {
-                for (var s in setting) {
-                    setting[s] = $('#setting-' + s).val();
-                }
-                setting['margin'] = parseInt($('#setting-margin').val()) || 8;
-                setting['spacing'] = parseInt($('#setting-spacing').val()) || 3;
-                setting['line'] = parseInt($('#setting-line').val()) || 0;
+                console.log('gSettingSave triggered'); // Debugging log
+                setting.compress = $('#setting-compress').is(':checked'); // Ambil nilai checkbox
+                setting.quality = parseFloat($('#setting-quality').val()) || 1; // Ambil nilai kualitas
+                setting.margin = parseInt($('#setting-margin').val()) || 0; // Pastikan margin diatur ke 0 jika tidak ada nilai
+                setting.spacing = parseInt($('#setting-spacing').val()) || 0;
+                setting.line = parseInt($('#setting-line').val()) || 0;
+
+                // Simpan ke localStorage
                 localStorage.setItem("cetak-setting", JSON.stringify(setting));
-                $('#gtModal').modal('hide');
+
+                // Terapkan pengaturan ke gambar yang sudah diunggah jika kompresi diaktifkan
+                if (setting.compress) {
+                    applySettingsToUploadedPhotos();
+                }
+
+                // Refresh preview
                 previewPDF();
+
+                // Tutup modal
+                $('#gtModal').modal('hide');
+            }
+
+
+            function applySettingsToUploadedPhotos() {
+                if (!setting.compress) return; // Jika kompresi tidak diaktifkan, keluar dari fungsi
+
+                const photoKeys = Object.keys(photos);
+                const compressedPhotosPromises = photoKeys.map((key) => {
+                    const originalData = photos[key].originalData || photos[key].data; // Gunakan data asli jika tersedia
+                    return compressImage(dataURLtoFile(originalData, `${key}.jpg`), 10, setting.quality)
+                        .then((compressedFile) => {
+                            const reader = new FileReader();
+                            reader.readAsDataURL(compressedFile);
+                            return new Promise((resolve) => {
+                                reader.onload = function () {
+                                    photos[key].data = reader.result; // Perbarui data gambar
+                                    resolve();
+                                };
+                            });
+                        });
+                });
+
+                Promise.all(compressedPhotosPromises).then(() => {
+                    previewPDF(); // Refresh preview setelah semua gambar diperbarui
+                });
+            }
+
+            // Fungsi untuk mengonversi data URL ke file
+            function dataURLtoFile(dataurl, filename) {
+                const arr = dataurl.split(',');
+                const mime = arr[0].match(/:(.*?);/)[1];
+                const bstr = atob(arr[1]);
+                let n = bstr.length;
+                const u8arr = new Uint8Array(n);
+                while (n--) {
+                    u8arr[n] = bstr.charCodeAt(n);
+                }
+                return new File([u8arr], filename, { type: mime });
             }
         </script>
     </div>
@@ -1259,11 +1600,35 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-lg-3 col-md-6">
+                            <label for="setting-quality">Kualitas Gambar</label>
+                            <div>
+                                <select id="setting-quality" class="form-control form-control-sm">
+                                    <option value="0.1">10%</option>
+                                    <option value="0.3">30%</option>
+                                    <option value="0.5">50%</option>
+                                    <option value="0.7" selected="selected">70%</option>
+                                    <option value="0.9">90%</option>
+                                    <option value="1">100%</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6">
+                            <label for="setting-compress">Kompresi Gambar</label>
+                            <div class="form-check">
+                                <input type="checkbox" id="setting-compress" class="form-check-input">
+                                <label class="form-check-label" for="setting-compress">Aktifkan Kompresi</label>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" onclick="gSettingSave()"><span
-                            class="fas fa-check mr-1"></span> Simpan</button>
+                    <!-- <button type="button" class="btn btn-success" onclick="gSettingSave()"><span
+                            class="fas fa-check mr-1"></span> Simpan</button> -->
                     <button type="button" class="btn btn-dark" data-dismiss="modal">Tutup</button>
                 </div>
             </div>
