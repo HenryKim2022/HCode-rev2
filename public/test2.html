@@ -164,7 +164,7 @@
                                     style="position:absolute; top: 0px; left: 0px;">
                             </div>
                         </div>
-                        <div class="bg-white mb-3 shadow" style="height: 297px; padding:0px;">
+                        <!-- <div class="bg-white mb-3 shadow" style="height: 297px; padding:0px;">
                             <div class="border position-relative" style="height: 297px;">
 
                             </div>
@@ -173,7 +173,7 @@
                         <div class="bg-white mb-3 shadow" style="height: 297px; padding:0px;">
                             <div class="border position-relative" style="height: 297px;">
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="px-3 py-3 bg-white border d-flex justify-content-between">
@@ -315,7 +315,8 @@
                 "63.5": 88.9, // Foto 2R
                 "89": 127,   // Foto 3R
                 "102": 152,  // Foto 4R
-                "127": 178,  // Foto 5R
+                "127": 178,  // Foto 5R Portrait
+                "178": 127,  // Foto 5R Landscape
                 "203": 254,  // Foto 8R
                 "254": 305,  // Foto 10R
                 "594": 420,  // Kertas A2
@@ -388,49 +389,99 @@
 
 
             // Tambahkan fungsi untuk mengompres gambar
+            // function compressImage(file, maxSizeMB = 10, quality = 0.8) {
+            //     return new Promise((resolve, reject) => {
+            //         if (file.size / 1024 / 1024 <= maxSizeMB) {
+            //             resolve(file); // Jika ukuran file <= 10MB, tidak perlu dikompres
+            //             return;
+            //         }
+
+            //         const reader = new FileReader();
+            //         reader.readAsDataURL(file);
+            //         reader.onload = function (event) {
+            //             const img = new Image();
+            //             img.src = event.target.result;
+            //             img.onload = function () {
+            //                 const canvas = document.createElement('canvas');
+            //                 const ctx = canvas.getContext('2d');
+
+            //                 // Set ukuran canvas sesuai dengan gambar asli
+            //                 canvas.width = img.width;
+            //                 canvas.height = img.height;
+
+            //                 // Gambar ulang gambar ke dalam canvas
+            //                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            //                 // Kompres gambar ke format JPEG dengan kualitas tertentu
+            //                 canvas.toBlob(
+            //                     (blob) => {
+            //                         if (blob) {
+            //                             const compressedFile = new File([blob], file.name, { type: 'image/jpeg' });
+            //                             resolve(compressedFile);
+            //                         } else {
+            //                             reject(new Error('Gagal mengompres gambar.'));
+            //                         }
+            //                     },
+            //                     'image/jpeg',
+            //                     Math.min(Math.max(quality, 0.1), 1) // Pastikan kualitas berada di antara 0.1 dan 1
+            //                 );
+            //             };
+            //         };
+            //         reader.onerror = function (error) {
+            //             reject(error);
+            //         };
+            //     });
+            // }
+
+
+
+
             function compressImage(file, maxSizeMB = 10, quality = 0.8) {
                 return new Promise((resolve, reject) => {
-                    if (file.size / 1024 / 1024 <= maxSizeMB) {
-                        resolve(file); // Jika ukuran file <= 10MB, tidak perlu dikompres
-                        return;
-                    }
-
                     const reader = new FileReader();
                     reader.readAsDataURL(file);
+
                     reader.onload = function (event) {
                         const img = new Image();
-                        img.src = event.target.result;
                         img.onload = function () {
                             const canvas = document.createElement('canvas');
                             const ctx = canvas.getContext('2d');
 
-                            // Set ukuran canvas sesuai dengan gambar asli
-                            canvas.width = img.width;
-                            canvas.height = img.height;
+                            // Tetapkan ukuran asli gambar
+                            const width = img.naturalWidth;
+                            const height = img.naturalHeight;
+                            canvas.width = width;
+                            canvas.height = height;
 
-                            // Gambar ulang gambar ke dalam canvas
-                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            // Gambar ulang ke canvas
+                            ctx.drawImage(img, 0, 0, width, height);
 
-                            // Kompres gambar ke format JPEG dengan kualitas tertentu
-                            canvas.toBlob(
-                                (blob) => {
-                                    if (blob) {
-                                        const compressedFile = new File([blob], file.name, { type: 'image/jpeg' });
-                                        resolve(compressedFile);
-                                    } else {
-                                        reject(new Error('Gagal mengompres gambar.'));
-                                    }
-                                },
-                                'image/jpeg',
-                                Math.min(Math.max(quality, 0.1), 1) // Pastikan kualitas berada di antara 0.1 dan 1
-                            );
+                            // Kompresi ke JPEG
+                            canvas.toBlob(blob => {
+                                if (blob) {
+                                    const compressedFile = new File([blob], file.name, { type: 'image/jpeg' });
+                                    resolve(compressedFile);
+                                } else {
+                                    reject(new Error('Gagal mengompres gambar.'));
+                                }
+                            }, 'image/jpeg', quality);
                         };
+
+                        img.onerror = function () {
+                            reject(new Error('Gagal memuat gambar.'));
+                        };
+
+                        img.src = event.target.result;
                     };
+
                     reader.onerror = function (error) {
                         reject(error);
                     };
                 });
             }
+
+
+
 
 
             // Modifikasi fungsi handleFiles untuk memproses kompresi
@@ -823,7 +874,7 @@
                 let currentHeight = 0; // Tracks the tallest image in the current row
                 let maxRight = paperWidth - 2 * setting['margin'];
                 let maxBottom = paperHeight - setting['margin'];
-                let html = '<div class="px-2 py-1 small bg-dark text-white">PREVIEW</div>';
+                let html = '<div class="px-2 py-1 small bg-dark text-white">PREVIEW A4</div>';
                 html += '<div class="bg-secondary border text-center py-2" style="height:350px; overflow: auto;">';
                 html += '<div style="width:210px;" class="mx-auto">';
                 html += '<div class="bg-white mb-3 shadow" style="height: ' + paperHeight + 'px; padding:' + setting['margin'] + 'px;">';
@@ -1409,7 +1460,7 @@
                         margin: 8,
                         spacing: 3,
                         line: 0,
-                        compress: true, // Default: kompresi aktif
+                        compress: false, // Default: kompresi aktif
                         quality: 1   // Default: kualitas 100%
                     };
                     localStorage.setItem("cetak-setting", JSON.stringify(setting));
@@ -1424,7 +1475,7 @@
                         margin: parseInt(setting.margin) || 8,
                         spacing: parseInt(setting.spacing) || 3,
                         line: parseInt(setting.line) || 0,
-                        compress: setting.compress !== undefined ? setting.compress : true,
+                        compress: setting.compress !== undefined ? setting.compress : false,
                         quality: parseFloat(setting.quality) || 1
                     };
                 }
@@ -1475,7 +1526,8 @@
 
             function gSettingSave() {
                 console.log('gSettingSave triggered'); // Debugging log
-                setting.compress = $('#setting-compress').is(':checked'); // Ambil nilai checkbox
+                // setting.compress = $('#setting-compress').is(':checked'); // Ambil nilai checkbox
+                setting.compress = false; // ambil nilai harcoded
                 setting.quality = parseFloat($('#setting-quality').val()) || 1; // Ambil nilai kualitas
                 setting.margin = parseInt($('#setting-margin').val()) || 0; // Pastikan margin diatur ke 0 jika tidak ada nilai
                 setting.spacing = parseInt($('#setting-spacing').val()) || 0;
@@ -1601,7 +1653,7 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-3 col-md-6">
+                        <!-- <div class="col-lg-3 col-md-6">
                             <label for="setting-quality">Kualitas Gambar</label>
                             <div>
                                 <select id="setting-quality" class="form-control form-control-sm">
@@ -1613,15 +1665,15 @@
                                     <option value="1">100%</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
 
-                        <div class="col-lg-3 col-md-6">
+                        <!-- <div class="col-lg-3 col-md-6">
                             <label for="setting-compress">Kompresi Gambar</label>
                             <div class="form-check">
                                 <input type="checkbox" id="setting-compress" class="form-check-input">
                                 <label class="form-check-label" for="setting-compress">Aktifkan Kompresi</label>
                             </div>
-                        </div>
+                        </div> -->
 
 
                     </div>
@@ -1659,19 +1711,20 @@
             "10": { label: "Foto 2R", ratio: 2 / 3, width: 63.5, height: 88.9, sizes: "63.5", photoHeight: "88.9" }, // Foto 2R
             "11": { label: "Foto 3R", ratio: 2 / 3, width: 89, height: 127, sizes: "89", photoHeight: "127" }, // Foto 3R
             "12": { label: "Foto 4R", ratio: 2 / 3, width: 102, height: 152, sizes: "102", photoHeight: "152" }, // Foto 4R
-            "13": { label: "Foto 5R", ratio: 2 / 3, width: 127, height: 178, sizes: "127", photoHeight: "178" }, // Foto 5R
-            "14": { label: "Foto 8R", ratio: 4 / 5, width: 203, height: 254, sizes: "203", photoHeight: "254" }, // Foto 8R
-            "15": { label: "Foto 10R", ratio: 4 / 5, width: 254, height: 305, sizes: "254", photoHeight: "305" }, // Foto 10R
+            "13": { label: "Foto 5R Portrait", ratio: 2 / 3, width: 127, height: 178, sizes: "127", photoHeight: "178" }, // Foto 5R Portrait
+            "14": { label: "Foto 5R Landscape", ratio: 3 / 2, width: 178, height: 127, sizes: "178", photoHeight: "127" }, // Foto 5R Landscape
+            "15": { label: "Foto 8R", ratio: 4 / 5, width: 203, height: 254, sizes: "203", photoHeight: "254" }, // Foto 8R
+            "16": { label: "Foto 10R", ratio: 4 / 5, width: 254, height: 305, sizes: "254", photoHeight: "305" }, // Foto 10R
 
 
-            "16": { label: "Kertas A2", ratio: 594 / 420, width: 594, height: 420, sizes: "594", photoHeight: "420" }, // Kertas A2
-            "17": { label: "Kertas A3", ratio: 420 / 297, width: 420, height: 297, sizes: "420", photoHeight: "297" }, // Kertas A3
-            "18": { label: "Kertas A4", ratio: 210 / 297, width: 193, height: 280, sizes: "193", photoHeight: "280" }, // Kertas A4
-            "19": { label: "Kertas A4 Landscape", ratio: 297 / 210, width: 297, height: 210, sizes: "297", photoHeight: "210" }, // Kertas A4 Landscape
-            "20": { label: "Kertas A5", ratio: 148 / 210, width: 148, height: 210, sizes: "148", photoHeight: "210" }, // Kertas A5
+            "17": { label: "Kertas A2", ratio: 594 / 420, width: 594, height: 420, sizes: "594", photoHeight: "420" }, // Kertas A2
+            "18": { label: "Kertas A3", ratio: 420 / 297, width: 420, height: 297, sizes: "420", photoHeight: "297" }, // Kertas A3
+            "19": { label: "Kertas A4", ratio: 210 / 297, width: 193, height: 280, sizes: "193", photoHeight: "280" }, // Kertas A4
+            "20": { label: "Kertas A4 Landscape", ratio: 297 / 210, width: 297, height: 210, sizes: "297", photoHeight: "210" }, // Kertas A4 Landscape
+            "21": { label: "Kertas A5", ratio: 148 / 210, width: 148, height: 210, sizes: "148", photoHeight: "210" }, // Kertas A5
 
-            "21": { label: "Facebook Cover", ratio: 1.91, width: 100, height: 52, sizes: "100", photoHeight: "52" }, // Facebook Cover
-            "22": { label: "Facebook Post", ratio: 1.91, width: 120, height: 63, sizes: "120", photoHeight: "63" }, // Facebook Post
+            "22": { label: "Facebook Cover", ratio: 1.91, width: 100, height: 52, sizes: "100", photoHeight: "52" }, // Facebook Cover
+            "23": { label: "Facebook Post", ratio: 1.91, width: 120, height: 63, sizes: "120", photoHeight: "63" }, // Facebook Post
         };
 
         const aspectRatioSelect = document.getElementById('aspectRatioSelect');
